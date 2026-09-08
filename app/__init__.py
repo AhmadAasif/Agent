@@ -9,8 +9,7 @@ def home():
 def create_app():
   app = Flask(__name__)
   app.register_blueprint(youtube_bp, url_prefix="/youtube")
-@app.route("/html")
-
-def html():
-  return render_template("index.html")
-return app;  
+  @app.route("/html")
+  def html():
+    return render_template("index.html")
+  return app
