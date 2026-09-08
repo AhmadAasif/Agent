@@ -22,6 +22,6 @@ def play():
 
   if not command:
     return jsonify({
-      "success":"False",
+      "success": False,
       "message":"There is no video name mentioned"
-    })400
+    }), 400
