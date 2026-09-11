@@ -1,258 +1,231 @@
-# AI Agent
+# Nova AI
 
-A lightweight, web-based AI agent built with **Python, Flask, and JavaScript**. The current implementation provides a simple voice-driven interface for interacting with Gmail and YouTube, with Gemini-powered email generation.
+Nova AI is a personal AI agent project built to make everyday computer tasks easier through natural language and voice commands.
 
-> **Project status:** Early development / prototype. The repository currently focuses on Gmail and YouTube integrations and is designed to grow into a broader computer-control AI agent.
+The project is currently in its early development stage. Right now, Nova can handle basic Gmail and YouTube tasks through a simple browser interface. The long-term goal is to turn Nova into a practical Windows assistant that can understand what the user wants and carry out tasks on the computer with as little manual interaction as possible.
 
-## Overview
+## What Nova Can Do
 
-The agent provides a browser-based interface where a user can speak a command and have the application route it to the appropriate capability.
+The current version focuses on two useful integrations:
 
-### Current capabilities
+- **Voice commands** — Nova accepts spoken commands through the browser's Speech Recognition API.
+- **Gmail assistance** — Nova can turn a user's request into a professional email using the Gemini API and open a pre-filled Gmail compose window for review.
+- **YouTube control** — Nova can search for a requested song or video and open it for playback.
+- **Web interface** — A lightweight Flask backend connects the browser interface with Nova's functionality.
+- **Health check** — A simple endpoint is available to confirm that the backend is running.
 
-- 🎙️ **Voice command input** using the browser's Speech Recognition API.
-- ✉️ **AI-assisted email drafting** with the Gemini API.
-- 📧 **Gmail compose integration** that opens a pre-filled Gmail compose window for review.
-- ▶️ **YouTube playback** by searching YouTube and opening the matching video in an embedded playback URL.
-- 🌐 **Flask web backend** with JSON endpoints for agent operations.
-- 🔗 **CORS support** for browser-based client communication.
-- ❤️ **Health endpoint** for basic service monitoring.
+Nova is deliberately being developed in small, practical steps rather than trying to build everything at once.
 
-## Architecture
+## How It Works
+
+At the moment, the flow is straightforward:
 
 ```text
-Browser UI
-   │
-   ├── Speech Recognition
-   │
-   ▼
-Flask Application
-   │
-   ├── /agent ──────────► Gmail command detection
-   │                         │
-   │                         ├── Email extraction
-   │                         ├── Gemini email generation
-   │                         └── Gmail compose URL
-   │
-   └── /youtube/play ───► YouTube search
-                             │
-                             └── Video playback URL
+User
+  │
+  │ Voice command
+  ▼
+Browser Interface
+  │
+  ▼
+Flask Backend
+  │
+  ├── Gmail command
+  │     ├── Extract email address
+  │     ├── Generate email with Gemini
+  │     └── Open Gmail compose
+  │
+  └── YouTube command
+        ├── Search YouTube
+        └── Open the requested video
 ```
+
+This structure keeps each feature separate, making it easier to add more capabilities as the project grows.
 
 ## Project Structure
 
 ```text
 Agent/
 ├── app/
-│   ├── __init__.py              # Flask application factory and agent routes
+│   ├── __init__.py              # Flask application and routes
 │   ├── gmail/
-│   │   ├── __init__.py          # Gmail package exports
-│   │   ├── gmail_gen.py          # Gemini-powered email generation
-│   │   └── gmail_write.py        # Email command detection and Gmail URL creation
+│   │   ├── __init__.py          # Gmail package
+│   │   ├── gmail_gen.py          # Gemini email generation
+│   │   └── gmail_write.py        # Email command handling
 │   ├── youtube/
-│   │   ├── __init__.py          # YouTube Flask blueprint and endpoint
-│   │   └── player.py             # YouTube search and playback URL generation
+│   │   ├── __init__.py          # YouTube route
+│   │   └── player.py             # YouTube search and playback
 │   └── templates/
-│       └── index.html            # Browser interface and client-side command handling
-├── requirements.txt              # Python dependencies
-├── wsgi.py                       # WSGI entry point
+│       └── index.html            # Nova's browser interface
+├── requirements.txt
+├── wsgi.py
 └── README.md
 ```
 
-## Technology Stack
+## Technology
 
-| Layer | Technology |
-|---|---|
-| Backend | Python, Flask |
-| Frontend | HTML, CSS, JavaScript |
-| Voice input | Web Speech API / Speech Recognition |
-| Generative AI | Google Gemini API |
-| Email | Gmail compose URL integration |
-| Video | YouTube search and playback |
-| Production server | Gunicorn |
-| Cross-origin requests | Flask-CORS |
+- Python
+- Flask
+- HTML, CSS and JavaScript
+- Web Speech API
+- Google Gemini API
+- Gmail compose integration
+- YouTube
+- Flask-CORS
+- Gunicorn
 
-## Requirements
+The current Gemini integration uses Python's built-in HTTP and JSON modules, so the Google Gemini Python SDK is not required.
 
-- Python 3.x
-- A modern browser with Speech Recognition support for voice input
-- A Gemini API key for AI email generation
-- Internet access for Gemini and YouTube functionality
+## Getting Started
 
-The current `requirements.txt` contains Flask, Flask-CORS, and Gunicorn. The Gemini integration uses Python's standard-library HTTP and JSON modules, so a separate Gemini Python SDK is not required by the current implementation.
+### Requirements
 
-## Installation
+Before running Nova, make sure you have:
 
-Clone the repository and enter the project directory:
+- Python 3.x installed
+- A modern browser with Speech Recognition support
+- A Gemini API key
+- An internet connection for Gemini and YouTube features
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/AhmadAasif/Agent.git
 cd Agent
 ```
 
-Create and activate a virtual environment:
+### 2. Create a virtual environment
 
-### Windows
+On Windows:
 
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
 
-Install the dependencies:
+### 3. Install the dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Configuration
+### 4. Add your Gemini API key
 
-Set the Gemini API key before starting the application.
-
-### Windows Command Prompt
+Command Prompt:
 
 ```cmd
 set GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 ```
 
-### Windows PowerShell
+PowerShell:
 
 ```powershell
 $env:GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
 ```
 
-The application also supports the optional `GEMINI_MODEL` environment variable. If it is not provided, the current code defaults to `gemini-3.6-flash`.
+You can also set `GEMINI_MODEL` if you want to use a different supported Gemini model. If it is not set, the current implementation uses `gemini-3.6-flash`.
 
-**Security:** Never commit API keys, `.env` files containing secrets, or other credentials to the repository.
+**Do not commit your API key or other secrets to GitHub.**
 
-## Running Locally
-
-Start the Flask application with:
+### 5. Start Nova
 
 ```bash
 flask --app wsgi run
 ```
 
-Then open the local address shown by Flask in a browser.
+Open the local address shown in the terminal to use the interface.
 
-The application exposes the following main routes:
+## Available Endpoints
 
-| Method | Endpoint | Purpose |
+| Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/` | Main web interface |
-| `GET` | `/html` | Main HTML interface |
-| `GET` | `/health` | Service health check |
-| `POST` | `/agent` | Process supported agent commands, currently email-focused |
-| `POST` | `/youtube/play` | Search for and prepare a YouTube video for playback |
+| `GET` | `/` | Opens the Nova web interface |
+| `GET` | `/html` | Opens the main HTML interface |
+| `GET` | `/health` | Checks whether the backend is running |
+| `POST` | `/agent` | Processes supported agent commands, currently focused on email |
+| `POST` | `/youtube/play` | Searches for and prepares a YouTube video |
 
-### Health check
+### Health Check
 
 ```bash
 curl http://127.0.0.1:5000/health
 ```
 
-Expected response:
+## Gmail
 
-```json
-{
-  "status": "ok",
-  "service": "nova AI Agent"
-}
-```
+Nova currently treats email generation as a review-first process rather than automatically sending messages.
 
-> The health response currently contains the legacy service label `nova AI Agent`; this is an implementation detail and can be renamed as the project branding is finalized.
-
-## Gmail Workflow
-
-The Gmail workflow is intentionally designed to generate a draft rather than silently send an email.
-
-1. The user gives a voice command containing an email-related instruction.
-2. The browser sends the command to `POST /agent`.
-3. The backend checks whether the command is an email command.
-4. An email address is extracted when one is present.
-5. Gemini converts the command into a concise professional email.
-6. The UI displays the generated recipient, subject, and body for review or editing.
-7. The user can open a pre-filled Gmail compose window.
-
-Example command:
+For example, a command such as:
 
 ```text
 Create an email for manager@example.com asking for leave tomorrow.
 ```
 
-The Gemini prompt is configured to avoid inventing names, dates, prices, companies, attachments, or other facts that were not supplied by the user.
+is sent to the backend. Nova identifies it as an email request, extracts the recipient, asks Gemini to prepare the message, and displays the result in the interface. The user can review or edit the message before opening it in Gmail.
 
-## YouTube Workflow
+The email generation prompt also tells Gemini not to make up information that was not provided by the user.
 
-The YouTube workflow accepts commands such as:
+## YouTube
+
+Nova can also handle simple YouTube commands, for example:
 
 ```text
 play believer
 play music shape of you
 ```
 
-The backend searches YouTube for the requested query, extracts a video ID from the returned page, and generates a playback URL. The browser then opens or reuses a YouTube window for playback.
-
-## API Examples
-
-### Process an email command
-
-```bash
-curl -X POST http://127.0.0.1:5000/agent \
-  -H "Content-Type: application/json" \
-  -d "{\"command\":\"create an email for manager@example.com asking for a meeting\"}"
-```
-
-### Play a YouTube search
-
-```bash
-curl -X POST http://127.0.0.1:5000/youtube/play \
-  -H "Content-Type: application/json" \
-  -d "{\"command\":\"play believer\"}"
-```
-
-## Design Principles
-
-- **Human-in-the-loop:** generated emails are presented for review before opening Gmail.
-- **Modular architecture:** Gmail and YouTube functionality are separated into dedicated modules and a Flask blueprint.
-- **Simple interfaces:** browser-to-backend communication uses lightweight JSON endpoints.
-- **Extensibility:** the command-processing architecture is intended to support additional agent capabilities over time.
-- **Graceful failure:** external API and search failures are returned as structured error responses where possible.
+The backend searches YouTube for the requested content and prepares a playback URL. The browser then opens the video for the user.
 
 ## Current Limitations
 
-This repository represents an early version of the agent. The current code does **not** yet provide full Windows computer control, autonomous task planning, offline LLM support, text-input UI, or custom voice output.
+Nova is still a work in progress. The current repository does not yet include the full Windows computer-control system planned for the project.
 
-The current browser interface is primarily voice-driven, and browser Speech Recognition availability depends on the browser and platform. Gemini-based email generation requires an API key and network access. YouTube search also requires network access.
+At this stage, Nova also does not yet have:
+
+- Typed text input alongside voice input
+- Text-to-speech responses
+- Full Windows application and system control
+- Offline/local LLM support
+- Autonomous multi-step task execution
+- A packaged Windows installer
+
+These are planned parts of the project rather than features of the current release.
 
 ## Roadmap
 
-Planned development areas include:
+The next stages of Nova's development are focused on making it more useful as a real desktop assistant:
 
-- 🖥️ Windows desktop and computer-control capabilities
-- 💬 Typed text input alongside voice input
-- 🔊 Text-to-speech responses
-- 🧠 Online + offline LLM support, including Gemini and a local model runtime such as Ollama
-- 🤖 More autonomous command understanding and task execution
-- 🌐 Broader web and application integrations
-- 📦 Packaging the agent as an installable Windows application
-- 🔐 Stronger secret management and production security
-- 🧪 Automated testing and improved error handling
+1. Add Windows computer-control capabilities.
+2. Add typed commands alongside voice input.
+3. Add natural text-to-speech responses.
+4. Support both online AI through Gemini and offline AI through a local model runtime such as Ollama.
+5. Improve command understanding and multi-step task execution.
+6. Add more web and application integrations.
+7. Package Nova as an installable Windows application.
+8. Improve security, testing, reliability and error handling.
+
+The roadmap may evolve as new features are tested and the project grows.
+
+## Development Approach
+
+Nova is being built as a hands-on project, with each capability added and tested individually. The aim is to keep the code understandable and modular while gradually moving from a simple browser assistant toward a more capable Windows AI agent.
+
+The project is intentionally open to improvements in architecture, AI models, voice technology and computer-control methods as development continues.
 
 ## Contributing
 
-The project is under active development. Contributions, ideas, bug reports, and improvements are welcome as the architecture evolves.
+Nova is an active development project. Suggestions, bug reports and improvements are welcome.
 
-Before submitting changes:
+When contributing, please:
 
-1. Keep features modular and focused.
-2. Avoid committing secrets or machine-specific configuration.
-3. Update the documentation when behavior or setup requirements change.
-4. Test the affected endpoints and UI workflow locally.
+1. Keep new functionality separated into sensible modules.
+2. Do not commit API keys or other private information.
+3. Update the README when setup or behavior changes.
+4. Test the affected functionality before submitting changes.
 
 ## License
 
-No open-source license has been specified for this repository yet. Until a license is added, the repository should not be assumed to grant permission to reuse, modify, or redistribute the code.
+No open-source license has been added to this repository yet. Until a license is provided, the code should not be assumed to be available for unrestricted reuse or redistribution.
 
 ## Author
 
