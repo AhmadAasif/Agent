@@ -1,10 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nova AI — Grand Line Console</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nova AI</title>
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Pirata+One&family=Inter:wght@400;500;600;700&display=swap');
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,Arial,sans-serif;color:#fff}body{min-height:100vh;overflow-x:hidden;background:#06182a;position:relative}
-body:before{content:"";position:fixed;inset:0;background-image:url("data:image/webp;base64,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
+body{
+    margin:0;
+    height:100vh;
+    display:grid;
+    place-items:center;
+    background:#09090b;
+    color:white;
+    font-family:Arial;
+}
+
+.card{
+    width:300px;
+    padding:35px;
+    text-align:center;
+    background:#151518;
+    border:1px solid #333;
+    border-radius:25px;
+}
+
+.mic{
+    width:90px;
+    height:90px;
+    border:0;
+    border-radius:50%;
+    font-size:35px;
+    cursor:pointer;
+}
+
+.status{
+    margin-top:20px;
+    color:#aaa;
+}
+
+.song{
+    margin-top:10px;
+    font-size:13px;
+}
+
+.listening{
+    transform:scale(1.1);
+    box-shadow:0 0 0 10px #ffffff18;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h2>Nova AI</h2>
+
+    <p>Say a song name</p>
+
+    <button id="mic" class="mic">
+        🎙️
+    </button>
+
+    <div id="status" class="status">
+        Tap microphone
+    </div>
+
+    <div id="song" class="song"></div>
+
+</div>
+
+<script>
+
+const mic=document.getElementById("mic");
+const status=document.getElementById("status");
+const song=document.getElementById("song");
+
+const SpeechRecognition=
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+let youtubeTab=null;
+let listening=false;
+
+if(!SpeechRecognition){
+
+    status.textContent=
+        "Speech recognition unavailable";
+
+    mic.disabled=true;
+
+}else{
+
+    const recognition=
+        new SpeechRecognition();
+
+    recognition.lang="en-US";
+    recognition.continuous=false;
+    recognition.interimResults=false;
+
+    recognition.onstart=()=>{
+
+        listening=true;
+
+        mic.classList.add("listening");
+
+        status.textContent=
+            "Listening...";
+
+    };
+
+    recognition.onend=()=>{
+
+        listening=false;
+
+        mic.classList.remove("listening");
+
+    };
+
+    recognition.onerror=()=>{
+
+        listening=false;
+
+        mic.classList.remove("listening");
+
+        status.textContent="Try again";
+
+    };
+
+    recognition.onresult=async(event)=>{
+
+        const command=
+            event.results[0][0]
+            .transcript
+            .trim();
+
+        if(!command){
+
+            status.textContent=
+                "No song detected";
+
+            return;
+
+        }
+
+        song.textContent=command;
+
+        status.textContent=
+            "Finding song...";
+
+        try{
+
+            const response=
+                await fetch(
+                    "/youtube/play",
+                    {
+                        method:"POST",
+
+                        headers:{
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:JSON.stringify({
+                            command:command
+                        })
+                    }
+                );
+
+            const data=
+                await response.json();
+
+            if(!data.success){
+
+                status.textContent=
+                    data.message ||
+                    "Song not found";
+
+                return;
+
+            }
+
+            if(!youtubeTab ||
+               youtubeTab.closed){
+
+                youtubeTab=
+                    window.open(
+                        data.url,
+                        "NovaYouTube"
+                    );
+
+            }else{
+
+                youtubeTab.location.href=
+                    data.url;
+
+                youtubeTab.focus();
+
+            }
+
+            status.textContent="Playing";
+
+        }catch(error){
+
+            console.error(error);
+
+            status.textContent=
+                "Server connection failed";
+
+        }
+
+    };
+
+    mic.onclick=()=>{
+
+        if(listening)
+            return;
+
+        try{
+
+            recognition.start();
+
+        }catch(error){
+
+            console.log(error);
+
+        }
+
+    };
+
+}
+
+</script>
+
+</body>
+</html>
