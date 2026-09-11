@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 from flask_cors import CORS
 
 from app.gmail import (
@@ -11,6 +11,21 @@ from app.gmail import (
 )
 
 from app.youtube import youtube_bp
+
+
+def _render_nova_page():
+    """Render the Nova UI with the embedded background image visible."""
+    html = render_template("index.html")
+
+    # index.html contains the uploaded Luffy background as an embedded WebP.
+    # Keep that image above the body's solid background and below the UI.
+    html = html.replace("z-index:-3", "z-index:0")
+    html = html.replace("z-index:-2", "z-index:1")
+
+    response = Response(html, mimetype="text/html")
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 
 def create_app():
@@ -27,12 +42,12 @@ def create_app():
     # Home
     @app.route("/")
     def home():
-        return render_template("index.html")
+        return _render_nova_page()
 
     # HTML
     @app.route("/html")
     def html():
-        return render_template("index.html")
+        return _render_nova_page()
 
     @app.route("/health")
     def health():
@@ -61,7 +76,6 @@ def create_app():
                 }), 400
 
             recipient = extract_email(command)
-
             email = generate_email_with_gemini(command)
 
             return jsonify({
@@ -79,7 +93,6 @@ def create_app():
             })
 
         except Exception as e:
-
             return jsonify({
                 "success": False,
                 "message": str(e)
