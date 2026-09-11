@@ -14,13 +14,24 @@ from app.youtube import youtube_bp
 
 
 def _render_nova_page():
-    """Render the Nova UI with the embedded background image visible."""
+    """Render the Nova UI with the embedded Luffy background visible above the page background."""
     html = render_template("index.html")
 
     # index.html contains the uploaded Luffy background as an embedded WebP.
-    # Keep that image above the body's solid background and below the UI.
+    # Put the image and overlay in a predictable stacking order, then lift the UI
+    # above both layers so the background cannot disappear behind the body.
     html = html.replace("z-index:-3", "z-index:0")
     html = html.replace("z-index:-2", "z-index:1")
+
+    background_fix = """
+<style id="nova-background-fix">
+html, body { background: transparent !important; }
+body:before { z-index: 0 !important; }
+body:after { z-index: 1 !important; pointer-events: none !important; }
+body > * { position: relative; z-index: 2; }
+</style>
+"""
+    html = html.replace("</head>", background_fix + "</head>")
 
     response = Response(html, mimetype="text/html")
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
